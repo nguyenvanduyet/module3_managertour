@@ -1,0 +1,84 @@
+create database ManagerStudent;
+use ManagerStudent;
+create table address
+(
+    id   int primary key,
+    name varchar(20)
+);
+create table classes
+(
+    id          int primary key,
+    name        varchar(20),
+    language    varchar(10),
+    description varchar(50)
+);
+
+create table student
+(
+    id         int primary key,
+    fullname   varchar(10),
+    address_id int,
+    phone      varchar(10) unique,
+    class_id   int
+);
+create table course
+(
+    id          int primary key,
+    name        varchar(20),
+    description varchar(50)
+);
+create table point
+(
+    id         int primary key,
+    course_id  int,
+    student_id int,
+    point      double
+);
+alter table student
+    add foreign key (address_id) references address (id);
+alter table student
+    add foreign key (class_id) references classes (id);
+alter table point
+    add foreign key (student_id) references student (id);
+alter table point
+    add foreign key (course_id) references course (id);
+insert into classes value (1, '1a', 'java', 'làm web');
+insert into classes value (2, '2a', 'php', 'làm game');
+insert into classes value (3, '3a', 'c++', 'làm app');
+insert into classes value (4, '2a', 'php', 'làm game');
+insert into classes value (5, '1a', 'java', 'làm web');
+insert into address value (11, 'hà nội');
+insert into address value (22, 'nghệ an');
+insert into address value (33, 'vĩnh phúc');
+insert into address value (44, 'nam định');
+insert into address value (55, 'thái bình');
+insert into student value (111,'thanh', 11,0999999999,1);
+insert into student value (222,'duyệt', 11,0888888888,1);
+insert into student value (333,'khải', 22,0966666666,2);
+insert into student value (444,'dũng', 33,0955555555,3);
+insert into student value (555,'toàn', 55,0988888888,2);
+insert into course value (99,'java cơ bản','module1');
+insert into course value (88,'java cơ nâng cao','module2');
+insert into course value (77,'php cơ bản','module1');
+insert into course value (66,'php nâng cao','module2');
+insert into course value (55,'c++ cơ bản','module1');
+insert into point value (1,99,111,9);
+insert into point value (2,99,222,8);
+insert into point value (3,77,333,8.5);
+insert into point value (4,77,444,9.5);
+insert into point value (5,55,555,9);
+select classes.name, count(name)'số lượng học viên của các lớp' from classes
+    join student s on classes.id = s.class_id
+    group by name;
+select address.name, count(name)'lượng HV các tỉnh' from address
+    join student s on address.id = s.address_id
+    group by name;
+select name,  avg(point)'điểm TB các khóa học' from point
+    join course c on point.course_id = c.id
+    group by point;
+select name, max(point)'điêmt TB khóa học cao nhất' from point
+    join course c on point.course_id = c.id;
+
+
+
+
